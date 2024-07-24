@@ -8,14 +8,15 @@ from tkinter import (
     messagebox,
     StringVar,
 )
+from tkinter.font import Font
 from controller import *
-from gui.main_window.dashboard.gui import Dashboard
-from gui.main_window.reservations.main import Reservations
+# from gui.main_window.dashboard.gui import Dashboard
+from gui.main_window.Dashboard_.main import Dashboard
 from gui.main_window.about.main import About
 from gui.main_window.rooms.main import Rooms
 from gui.main_window.guests.main import Guests
 from .. import login
-
+from pyzk.example.live_capture import live_capture
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
@@ -37,14 +38,14 @@ class MainWindow(Toplevel):
         self.title("HotinGo - The state of art HMS")
 
         self.geometry("1012x506")
-        self.configure(bg="#5E95FF")
+        self.configure(bg="#173c5c")
 
         self.current_window = None
-        self.current_window_label = StringVar()
+        #self.current_window_label = StringVar()
 
         self.canvas = Canvas(
             self,
-            bg="#5E95FF",
+            bg="#173c5c",
             height=506,
             width=1012,
             bd=0,
@@ -62,84 +63,123 @@ class MainWindow(Toplevel):
         self.sidebar_indicator = Frame(self, background="#FFFFFF")
 
         self.sidebar_indicator.place(x=0, y=133, height=47, width=7)
+ #########################################
+        bold_font = Font(family="Helvetica", size=12, weight="bold")
+
+        self.onoff = Button(
+            self.canvas,
+            text="ON/OFF",
+            borderwidth=1,
+            highlightthickness=0,
+            cursor='hand2', activebackground="#173c5c",background="#173c5c",
+            command=lambda: live_capture(),
+            relief="flat",
+        )
+        self.onoff.place(x=3.0, y=80.0, width=208.0, height=47.0)
+ #########################################
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
         self.dashboard_btn = Button(
             self.canvas,
-            image=button_image_1,
-            borderwidth=0,
+            text="Dashboard",
+            borderwidth=1,
             highlightthickness=0,
-            command=lambda: self.handle_btn_press(self.dashboard_btn, "dash"),
-            cursor='hand2', activebackground="#5E95FF",
+            command=lambda: self.handle_btn_press(self.dashboard_btn, "res"),
+            cursor='hand2', activebackground="#173c5c",background="#173c5c",
+            fg="white",
             relief="flat",
+            font=bold_font,  # Set the font to the bold font
+            anchor="w",  # Left justify the text
+            padx=10  # Add padding to the left side of the text
+
         )
         self.dashboard_btn.place(x=7.0, y=133.0, width=208.0, height=47.0)
 
         button_image_2 = PhotoImage(file=relative_to_assets("button_2.png"))
         self.rooms_btn = Button(
             self.canvas,
-            image=button_image_2,
-            borderwidth=0,
+            text="Add employee",
+            borderwidth=1,
             highlightthickness=0,
             command=lambda: self.handle_btn_press(self.rooms_btn, "roo"),
-            cursor='hand2', activebackground="#5E95FF",
+            cursor='hand2', activebackground="#173c5c",background="#173c5c",
+            fg="white",
             relief="flat",
+            font=bold_font,  # Set the font to the bold font
+            anchor="w",  # Left justify the text
+            padx=10  # Add padding to the left side of the text
         )
         self.rooms_btn.place(x=7.0, y=183.0, width=208.0, height=47.0)
 
         button_image_3 = PhotoImage(file=relative_to_assets("button_3.png"))
         self.guests_btn = Button(
             self.canvas,
-            image=button_image_3,
-            borderwidth=0,
+            text="Employees",
+            borderwidth=1,
             highlightthickness=0,
             command=lambda: self.handle_btn_press(self.guests_btn, "gue"),
-            cursor='hand2', activebackground="#5E95FF",
+            cursor='hand2', activebackground="#173c5c",background="#173c5c",
+             fg="white",
             relief="flat",
+            font=bold_font,  # Set the font to the bold font
+            anchor="w",  # Left justify the text
+            padx=10  # Add padding to the left side of the text
         )
-        self.guests_btn.place(x=7.0, y=283.0, width=208.0, height=47.0)
+        self.guests_btn.place(x=7.0, y=233.0, width=208.0, height=47.0)
 
         button_image_4 = PhotoImage(file=relative_to_assets("button_4.png"))
-        self.about_btn = Button(
-            self.canvas,
-            image=button_image_4,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: self.handle_btn_press(self.about_btn, "abt"),
-            cursor='hand2', activebackground="#5E95FF",
-            relief="flat",
-        )
-        self.about_btn.place(x=7.0, y=333.0, width=208.0, height=47.0)
+        # self.about_btn = Button(
+        #     self.canvas,
+        #     text="Employees",
+        #     borderwidth=1,
+        #     highlightthickness=0,
+        #     command=lambda: self.handle_btn_press(self.about_btn, "abt"),
+        #     cursor='hand2', activebackground="#173c5c",background="#173c5c",
+        #      fg="white",
+        #     relief="flat",
+        #     font=bold_font , # Set the font to the bold font
+        #     anchor="w",  # Left justify the text
+        #     padx=10  # Add padding to the left side of the text
+        # )
+        # self.about_btn.place(x=7.0, y=233.0, width=208.0, height=47.0)
 
         button_image_5 = PhotoImage(file=relative_to_assets("button_5.png"))
         self.logout_btn = Button(
             self.canvas,
             image=button_image_5,
-            borderwidth=0,
+            borderwidth=1,
             highlightthickness=0,
             command=self.logout,
+             fg="white",
             relief="flat",
+            font=bold_font , # Set the font to the bold font
+            anchor="w",  # Left justify the text
+            padx=10  # Add padding to the left side of the text
         )
         self.logout_btn.place(x=0.0, y=441.0, width=215.0, height=47.0)
 
-        button_image_6 = PhotoImage(file=relative_to_assets("button_6.png"))
-        self.reservations_btn = Button(
-            self.canvas,
-            image=button_image_6,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: self.handle_btn_press(self.reservations_btn, "res"),
-            cursor='hand2', activebackground="#5E95FF",
-            relief="flat",
-        )
-        self.reservations_btn.place(x=7.0, y=233.0, width=208.0, height=47.0)
+        # button_image_6 = PhotoImage(file=relative_to_assets("button_6.png"))
+        # self.reservations_btn = Button(
+        #     self.canvas,
+        #     text="Dashboard",
+        #     borderwidth=1,
+        #     highlightthickness=0,
+        #     command=lambda: self.handle_btn_press(self.reservations_btn, "res"),
+        #     cursor='hand2', activebackground="#173c5c", background="#173c5c",
+        #      fg="white",
+        #     relief="flat",
+        #     font=bold_font , # Set the font to the bold font
+        #     anchor="w",  # Left justify the text
+        #     padx=10  # Add padding to the left side of the text
+        # )
+        # self.reservations_btn.place(x=7.0, y=233.0, width=208.0, height=47.0)
 
         self.heading = self.canvas.create_text(
             255.0,
             33.0,
             anchor="nw",
             text="Hello",
-            fill="#5E95FF",
+            fill="#173c5c",
             font=("Montserrat Bold", 26 * -1),
         )
 
@@ -147,16 +187,16 @@ class MainWindow(Toplevel):
             28.0,
             21.0,
             anchor="nw",
-            text="HotinGo",
+            text="Devsol",
             fill="#FFFFFF",
-            font=("Montserrat Bold", 36 * -1),
+            font=("Montserrat Bold", 22 * -1),
         )
 
         self.canvas.create_text(
             844.0,
             43.0,
             anchor="nw",
-            text="Administrator",
+            text="",
             fill="#808080",
             font=("Montserrat Bold", 16 * -1),
         )
@@ -181,14 +221,14 @@ class MainWindow(Toplevel):
 
         # Loop through windows and place them
         self.windows = {
-            "dash": Dashboard(self),
+            # "dash": Dashboard(self),
             "roo": Rooms(self),
             "gue": Guests(self),
             "abt": About(self),
-            "res": Reservations(self),
+            "res": Dashboard(self),
         }
 
-        self.handle_btn_press(self.dashboard_btn, "dash")
+        self.handle_btn_press(self.dashboard_btn, "res")
         self.sidebar_indicator.place(x=0, y=133)
 
         self.current_window.place(x=215, y=72, width=1013.0, height=506.0)
@@ -225,8 +265,14 @@ class MainWindow(Toplevel):
 
         # Handle label change
         current_name = self.windows.get(name)._name.split("!")[-1].capitalize()
+        if current_name == 'Rooms':
+            current_name = "Add New Employee"
+        if current_name == 'Guests':
+            current_name = "Employees"
+        
         self.canvas.itemconfigure(self.heading, text=current_name)
 
     def handle_dashboard_refresh(self):
         # Recreate the dash window
-        self.windows["dash"] = Dashboard(self)
+        # self.windows["dash"] = Dashboard(self)
+        None

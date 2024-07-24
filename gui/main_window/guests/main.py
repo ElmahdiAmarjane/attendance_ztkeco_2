@@ -24,7 +24,7 @@ class Guests(Frame):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         self.selected_rid = None
-        self.guest_data = db_controller.get_guests()
+        self.guest_data = db_controller.get_all_employees()
 
         self.configure(bg="#FFFFFF")
 
@@ -35,7 +35,7 @@ class Guests(Frame):
             "edit": UpdateGuests(self),
         }
 
-        self.current_window = self.windows["add"]
+        self.current_window = self.windows["view"]
         self.current_window.place(x=0, y=0, width=1013.0, height=506.0)
 
         self.current_window.tkraise()

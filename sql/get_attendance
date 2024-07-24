@@ -1,0 +1,37 @@
+
+
+
+
+
+# Function to parse each entry
+def parse_entry(entry):
+    
+    user_id = entry.get_userid
+    date_time = parts[2].split(" (")[0]
+    status, punch_code = map(int, parts[2].split(" (")[1].strip(')').split(", "))
+    punch_type = 'in' if punch_code in [1, 4] else 'out'
+    return user_id, punch_type, date_time
+
+# Function to check if entry exists and insert if not
+def insert_entry(user_id, punch_type, date_time):
+    # Check if the entry already exists
+    cursor.execute("""
+        SELECT COUNT(*) FROM entry_exit_log
+        WHERE employee_id = %s AND event_type = %s AND event_time = %s
+    """, (user_id, punch_type, date_time))
+    
+    if cursor.fetchone()[0] == 0:
+        # Insert the new entry
+        cursor.execute("""
+            INSERT INTO entry_exit_log (employee_id, event_type, event_time)
+            VALUES (%s, %s, %s)
+        """, (user_id, punch_type, date_time))
+        conn.commit()
+
+# Process each entry
+for entry in data_list:
+    user_id, punch_type, date_time = parse_entry(entry)
+    insert_entry(user_id, punch_type, date_time)
+
+# Close connection
+conn.close()

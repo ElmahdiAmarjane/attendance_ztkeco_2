@@ -13,7 +13,7 @@ ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
 
 def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
+    return ASSETS_PATH / Path(path) 
 
 
 def rooms():
@@ -25,7 +25,7 @@ class Rooms(Frame):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         self.selected_rid = None
-        self.room_data = db_controller.get_rooms()
+        self.room_data = db_controller.count_all_employees()
 
         self.configure(bg="#FFFFFF")
 

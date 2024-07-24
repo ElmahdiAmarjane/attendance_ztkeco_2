@@ -1,5 +1,6 @@
 from logging import disable
 from pathlib import Path
+from tkinter import ttk
 import controller as db_controller
 
 from tkinter import (
@@ -57,28 +58,11 @@ class ViewGuests(Frame):
             116.0,
             33.0,
             anchor="nw",
-            text="View Guests",
+            text="All Employees",
             fill="#5E95FF",
             font=("Montserrat Bold", 26 * -1),
         )
 
-        self.canvas.create_text(
-            40.0,
-            367.0,
-            anchor="nw",
-            text="Avail. Actions:",
-            fill="#5E95FF",
-            font=("Montserrat Bold", 26 * -1),
-        )
-
-        self.canvas.create_text(
-            116.0,
-            65.0,
-            anchor="nw",
-            text="And Perform Operations",
-            fill="#808080",
-            font=("Montserrat SemiBold", 16 * -1),
-        )
 
         self.image_image_1 = PhotoImage(file=relative_to_assets("image_1.png"))
         image_1 = self.canvas.create_image(666.0, 59.0, image=self.image_image_1)
@@ -162,13 +146,18 @@ class ViewGuests(Frame):
         # Add treeview here
 
         self.columns = {
-            "Guest ID": ["Guest ID", 30],
-            "Name": ["Name", 80],
-            "Address": ["Address", 100],
-            "Email": ["Email", 250],
-            "Phone Number": ["Phone Number", 250],
-            "Created At": ["Created At", 200],
+            "id": ["Employee ID", 30],
+            "name": ["Name", 100],
+            "telephone": ["Telephone", 100],
+            "created_at": ["Created At", 100],
+      
         }
+
+        style = ttk.Style()
+        style.theme_use("default")
+
+# Configure the Treeview heading
+        style.configure("Treeview.Heading", background="#173c5c", foreground="#171c0c", font=("Montserrat Bold", 12))
 
         self.treeview = Treeview(
             self,
@@ -185,7 +174,9 @@ class ViewGuests(Frame):
         for idx, txt in self.columns.items():
             self.treeview.heading(idx, text=txt[0])
             # Set the column widths
-            self.treeview.column(idx, width=txt[1])
+            self.treeview.column(idx, width=txt[1], anchor='center')
+        
+            
 
         self.treeview.place(x=40.0, y=101.0, width=700.0, height=229.0)
 
@@ -221,18 +212,26 @@ class ViewGuests(Frame):
 
     def handle_refresh(self):
         self.treeview.delete(*self.treeview.get_children())
-        self.guest_data = db_controller.get_guests()
+        self.guest_data = db_controller.get_all_employees()
         for row in self.guest_data:
             self.treeview.insert("", "end", values=row)
 
     def handle_navigate_back(self):
-        self.parent.navigate("add")
+        self.parent.navigate("view")
+
+    from tkinter import messagebox
 
     def handle_delete(self):
-        if db_controller.delete_guest(self.parent.selected_rid):
-            messagebox.showinfo("Successfully Deleted the guest")
+       print('🐊🐊🐊id to delete : ', self.parent.selected_rid)
+    
+    # Ask the user for confirmation before deleting
+       confirm = messagebox.askokcancel("Confirm Delete", "Are you sure you want to delete this employee?")
+    
+       if confirm:
+        if db_controller.delete_employee(self.parent.selected_rid):
+            messagebox.showinfo("Info", "Successfully Deleted the employee" + " " * 20)  # Added spaces for width
         else:
-            messagebox.showerror("Unable to delete guest")
+            messagebox.showerror("Error", "Unable to delete employee" + " " * 20)  # Added spaces for width
 
         self.handle_refresh()
 

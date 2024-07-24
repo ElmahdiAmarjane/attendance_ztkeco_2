@@ -108,7 +108,7 @@ class ViewRooms(Frame):
             image=self.button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=self.handle_refresh,
+            # command=self.handle_refresh,
             relief="flat",
         )
         self.refresh_btn.place(x=525.0, y=33.0, width=53.0, height=53.0)
@@ -189,7 +189,7 @@ class ViewRooms(Frame):
         self.treeview.place(x=40.0, y=101.0, width=700.0, height=229.0)
 
         # Insert data
-        self.handle_refresh()
+        # self.handle_refresh()
 
         # Add selection event
         self.treeview.bind("<<TreeviewSelect>>", self.on_treeview_select)
@@ -218,11 +218,11 @@ class ViewRooms(Frame):
         self.delete_btn.config(state="normal")
         self.edit_btn.config(state="normal")
 
-    def handle_refresh(self):
-        self.treeview.delete(*self.treeview.get_children())
-        self.room_data = db_controller.get_rooms()
-        for row in self.room_data:
-            self.treeview.insert("", "end", values=row)
+    #def handle_refresh(self):
+    #     self.treeview.delete(*self.treeview.get_children())
+    #     self.room_data = db_controller.count_all_employees()
+    #     for row in self.room_data:
+    #         self.treeview.insert("", "end", values=row)
 
     def handle_navigate_back(self):
         self.parent.navigate("add")
@@ -233,7 +233,7 @@ class ViewRooms(Frame):
         else:
             messagebox.showerror("Unable to delete room")
 
-        self.handle_refresh()
+        # self.handle_refresh()
 
     def handle_edit(self):
         self.parent.navigate("edit")

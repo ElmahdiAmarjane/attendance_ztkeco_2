@@ -1,10 +1,8 @@
 from pathlib import Path
-
 from tkinter import (
     Frame,
     Canvas,
     Entry,
-    Text,
     Button,
     PhotoImage,
     messagebox,
@@ -16,14 +14,11 @@ import controller as db_controller
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
-
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-
 def update_guests():
     UpdateGuests()
-
 
 class UpdateGuests(Frame):
     def __init__(self, parent, controller=None, *args, **kwargs):
@@ -36,8 +31,8 @@ class UpdateGuests(Frame):
         self.data = {
             "id": StringVar(),
             "name": StringVar(),
-            "address": StringVar(),
-            "phone": IntVar(),
+            "telephone": StringVar(),
+            "created_at": IntVar(),
         }
 
         self.initialize()
@@ -61,7 +56,7 @@ class UpdateGuests(Frame):
             116.0,
             33.0,
             anchor="nw",
-            text="Update Guest",
+            text="Update Employee",
             fill="#5E95FF",
             font=("Montserrat Bold", 26 * -1),
         )
@@ -81,7 +76,7 @@ class UpdateGuests(Frame):
             image=self.button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: self.parent.navigate("add"),
+            command=lambda: self.parent.navigate("view"),
             relief="flat",
         )
         button_1.place(x=40.0, y=33.0, width=53.0, height=53.0)
@@ -93,7 +88,7 @@ class UpdateGuests(Frame):
             71.56398010253906,
             145.0,
             anchor="nw",
-            text="Guest ID",
+            text="Employee ID",
             fill="#5E95FF",
             font=("Montserrat Bold", 14 * -1),
         )
@@ -102,7 +97,7 @@ class UpdateGuests(Frame):
             72.0,
             172.0,
             anchor="nw",
-            text="1024",
+            text=self.parent.selected_rid,
             fill="#777777",
             font=("Montserrat SemiBold", 17 * -1),
         )
@@ -114,7 +109,7 @@ class UpdateGuests(Frame):
             71.56398010253906,
             251.0,
             anchor="nw",
-            text="Guest Address",
+            text="Employee Phone",
             fill="#5E95FF",
             font=("Montserrat Bold", 14 * -1),
         )
@@ -126,7 +121,7 @@ class UpdateGuests(Frame):
         entry_1 = Entry(
             self,
             font=("Montserrat Bold", 18 * -1),
-            textvariable=self.data["address"],
+            textvariable=self.data["telephone"],
             foreground="#777777",
             bd=0,
             bg="#EFEFEF",
@@ -143,7 +138,7 @@ class UpdateGuests(Frame):
             455.0473937988281,
             145.0,
             anchor="nw",
-            text="Guest Name",
+            text="Employee Name",
             fill="#5E95FF",
             font=("Montserrat Bold", 14 * -1),
         )
@@ -168,7 +163,7 @@ class UpdateGuests(Frame):
             455.0473937988281,
             253.0,
             anchor="nw",
-            text="Phone Number",
+            text="Created At",
             fill="#5E95FF",
             font=("Montserrat Bold", 14 * -1),
         )
@@ -180,11 +175,12 @@ class UpdateGuests(Frame):
         entry_3 = Entry(
             self,
             font=("Montserrat Bold", 18 * -1),
-            textvariable=self.data["phone"],
+            textvariable=self.data["created_at"],
             foreground="#777777",
             bd=0,
             bg="#EFEFEF",
             highlightthickness=0,
+            state="readonly"
         )
         entry_3.place(
             x=455.0473937988281, y=278.0, width=268.9241638183594, height=22.0
@@ -203,33 +199,29 @@ class UpdateGuests(Frame):
 
     def initialize(self):
         self.selected_r_id = self.parent.selected_rid
-        self.guests_data = self.parent.guest_data
-
-        # Filter out all reservations for selected id reservation
-        self.selected_guests_data = list(
-            filter(lambda x: str(x[0]) == self.selected_r_id, self.guests_data)
-        )
-
-        if self.selected_guests_data:
-            self.selected_guests_data = self.selected_guests_data[0]
-
-            self.canvas.itemconfigure(self.id_text, text=self.selected_guests_data[0])
-            self.data["name"].set(self.selected_guests_data[1])
-            self.data["address"].set(self.selected_guests_data[2])
-            self.data["phone"].set(self.selected_guests_data[4])
+        
+        # Fetch the employee details
+        employee_details = db_controller.get_employee_by_id(self.selected_r_id)
+        
+        # Update the StringVar and IntVar with the fetched details
+        if employee_details:
+            self.data["id"].set(employee_details['id'])
+            self.data["name"].set(employee_details['name'])
+            self.data["telephone"].set(employee_details['telephone'])
+            self.data["created_at"].set(employee_details['created_at'])
 
     def handle_update(self):
         data = [
             x
-            for x in [self.data[label].get() for label in ("name", "address", "phone")]
+            for x in [self.data[label].get() for label in ("name", "telephone")]
         ]
 
-        result = db_controller.update_guests(
-            name=data[0], address=data[1], phone=data[2], id=self.selected_r_id
+        result = db_controller.update_employee(
+            name=data[0], telephone=data[1], id=self.selected_r_id
         )
         if result:
-            messagebox.showinfo("Success", "Guest Updated")
+            messagebox.showinfo("Success", "Employee Updated")
             self.parent.navigate("view")
             self.parent.windows['view'].handle_refresh()
         else:
-            messagebox.showerror("Error", "Failed to update guest. Please Verify that all IDs are correct.")
+            messagebox.showerror("Error", "Failed to update employee. Please verify that all details are correct.")
