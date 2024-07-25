@@ -239,6 +239,17 @@ class AddGuests(Frame):
         )
         button_3.place(x=547.0, y=210.0, width=209.0, height=74.0)
 
+       # self.button_image_3 = PhotoImage(file=relative_to_assets("button_3.png"))
+        button_3 = Button(
+            self,
+            text="Details",
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: self.parent.navigate("edit"),
+            relief="flat",
+        )
+        button_3.place(x=490.0, y=210.0, width=209.0, height=74.0)
+
     # Save the data to the database
     def save(self):
         # check if any fields are empty

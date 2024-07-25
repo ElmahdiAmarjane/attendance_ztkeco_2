@@ -16,7 +16,7 @@ from gui.main_window.about.main import About
 from gui.main_window.rooms.main import Rooms
 from gui.main_window.guests.main import Guests
 from .. import login
-from pyzk.example.live_capture import live_capture
+from pyzk.example.get_attendence import get_attendence
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
@@ -35,7 +35,7 @@ class MainWindow(Toplevel):
     def __init__(self, *args, **kwargs):
         Toplevel.__init__(self, *args, **kwargs)
 
-        self.title("HotinGo - The state of art HMS")
+        self.title("Devsol - Attandance System managemant")
 
         self.geometry("1012x506")
         self.configure(bg="#173c5c")
@@ -64,20 +64,36 @@ class MainWindow(Toplevel):
 
         self.sidebar_indicator.place(x=0, y=133, height=47, width=7)
  #########################################
-        bold_font = Font(family="Helvetica", size=12, weight="bold")
+    
 
-        self.onoff = Button(
+        self.create_rounded_button(
+            x=35.0, y=60.0, width=120.0, height=35.0, radius=10, text="Update Data", command=get_attendence
+        )
+    def create_rounded_button(self, x, y, width, height, radius, text, command):
+        self.canvas.create_oval(x, y, x + radius, y + radius, fill="#8c8d8f", outline="")
+        self.canvas.create_oval(x + width - radius, y, x + width, y + radius, fill="#8c8d8f", outline="")
+        self.canvas.create_oval(x, y + height - radius, x + radius, y + height, fill="#8c8d8f", outline="")
+        self.canvas.create_oval(x + width - radius, y + height - radius, x + width, y + height, fill="#8c8d8f", outline="")
+        self.canvas.create_rectangle(x + radius / 2, y, x + width - radius / 2, y + height, fill="#8c8d8f", outline="")
+        self.canvas.create_rectangle(x, y + radius / 2, x + width, y + height - radius / 2, fill="#8c8d8f", outline="")
+        button = Button(
             self.canvas,
-            text="ON/OFF",
-            borderwidth=1,
+            text=text,
+            borderwidth=0,
             highlightthickness=0,
-            cursor='hand2', activebackground="#173c5c",background="#173c5c",
-            command=lambda: live_capture(),
+            cursor='hand2',
+            activebackground="#1a73e8",
+            activeforeground="#ffffff",
+            background="#8c8d8f",
+            foreground="#ffffff",
+            font=("Helvetica", 12, "bold"),
+            command=command,
             relief="flat",
         )
-        self.onoff.place(x=3.0, y=80.0, width=208.0, height=47.0)
- #########################################
+        button.place(x=x + radius / 4, y=y + radius / 4, width=width - radius / 2, height=height - radius / 2)
 
+ #########################################
+        bold_font = Font(family="Helvetica", size=12, weight="bold")
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
         self.dashboard_btn = Button(
             self.canvas,
@@ -276,3 +292,4 @@ class MainWindow(Toplevel):
         # Recreate the dash window
         # self.windows["dash"] = Dashboard(self)
         None
+    

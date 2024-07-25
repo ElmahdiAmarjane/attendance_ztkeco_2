@@ -30,21 +30,21 @@ class Login(Toplevel):
         else:
             messagebox.showerror(
                 title="Invalid Credentials",
-                message="The username and self.password don't match",
+                message="The username and password don't match",
             )
 
     def __init__(self, *args, **kwargs):
 
         Toplevel.__init__(self, *args, **kwargs)
 
-        self.title("Login - HotinGo")
+        self.title("Login - Devsol Attendance System")
 
         self.geometry("1012x506")
-        self.configure(bg="#5E95FF")
+        self.configure(bg="#173c5c")
 
         self.canvas = Canvas(
             self,
-            bg="#5E95FF",
+            bg="#173c5c",
             height=506,
             width=1012,
             bd=0,
@@ -72,7 +72,7 @@ class Login(Toplevel):
             306.0,
             anchor="nw",
             text="Password",
-            fill="#5E95FF",
+            fill="#173c5c",
             font=("Montserrat Bold", 14 * -1),
         )
 
@@ -81,7 +81,7 @@ class Login(Toplevel):
             204.0,
             anchor="nw",
             text="Username",
-            fill="#5E95FF",
+            fill="#173c5c",
             font=("Montserrat Bold", 14 * -1),
         )
 
@@ -90,7 +90,7 @@ class Login(Toplevel):
             66.0,
             anchor="nw",
             text="Enter your login details",
-            fill="#5E95FF",
+            fill="#173c5c",
             font=("Montserrat Bold", 26 * -1),
         )
 
@@ -109,27 +109,9 @@ class Login(Toplevel):
             85.0,
             77.0,
             anchor="nw",
-            text="HotinGo",
+            text="Devsol attendance system",
             fill="#FFFFFF",
-            font=("Montserrat Bold", 50 * -1),
-        )
-
-        self.canvas.create_text(
-            553.0,
-            109.0,
-            anchor="nw",
-            text="Enter the credentials that the admin gave",
-            fill="#CCCCCC",
-            font=("Montserrat Bold", 16 * -1),
-        )
-
-        self.canvas.create_text(
-            553.0,
-            130.0,
-            anchor="nw",
-            text="you while signing up for the program",
-            fill="#CCCCCC",
-            font=("Montserrat Bold", 16 * -1),
+            font=("Montserrat Bold", 30 * -1),
         )
 
         entry_image_3 = PhotoImage(file=relative_to_assets("entry_3.png"))
@@ -161,76 +143,21 @@ class Login(Toplevel):
             90.0,
             431.0,
             anchor="nw",
-            text="© Mohit & Anirudh, 2021",
+            text="© Devsol , 2024",
             fill="#FFFFFF",
             font=("Montserrat Bold", 18 * -1),
         )
 
         image_image_1 = PhotoImage(file=relative_to_assets("image_1.png"))
-        image_1 = self.canvas.create_image(458.0, 326.0, image=image_image_1)
+        image_1 = self.canvas.create_image(220.0, 326.0, image=image_image_1)
 
-        self.canvas.create_text(
-            90.0,
-            150.0,
-            anchor="nw",
-            text="Hotingo is a Hotel",
-            fill="#FFFFFF",
-            font=("Montserrat Regular", 18 * -1),
-        )
+        
 
-        self.canvas.create_text(
-            90.0,
-            179.0,
-            anchor="nw",
-            text="Management system that",
-            fill="#FFFFFF",
-            font=("Montserrat Regular", 18 * -1),
-        )
 
-        self.canvas.create_text(
-            90.0,
-            208.0,
-            anchor="nw",
-            text="allows you to manage guests,",
-            fill="#FFFFFF",
-            font=("Montserrat Regular", 18 * -1),
-        )
 
-        self.canvas.create_text(
-            90.0,
-            237.0,
-            anchor="nw",
-            text="room, and reservations using",
-            fill="#FFFFFF",
-            font=("Montserrat Regular", 18 * -1),
-        )
+       
 
-        self.canvas.create_text(
-            90.0,
-            266.0,
-            anchor="nw",
-            text="a well-engineered solution.",
-            fill="#FFFFFF",
-            font=("Montserrat Regular", 18 * -1),
-        )
 
-        self.canvas.create_text(
-            90.0,
-            295.0,
-            anchor="nw",
-            text="Login to have a look for",
-            fill="#FFFFFF",
-            font=("Montserrat Regular", 18 * -1),
-        )
-
-        self.canvas.create_text(
-            90.0,
-            324.0,
-            anchor="nw",
-            text="yourself...",
-            fill="#FFFFFF",
-            font=("Montserrat Regular", 18 * -1),
-        )
 
         # Bind enter to form submit
         self.username.bind("<Return>", lambda x: self.loginFunc())

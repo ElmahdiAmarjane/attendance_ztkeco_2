@@ -6,7 +6,7 @@ import controller as db_controller
 from .add_guests.gui import AddGuests
 from .view_guests.main import ViewGuests
 from .update_guests.main import UpdateGuests
-
+from .view_history.main import ViewHistory
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
@@ -33,6 +33,7 @@ class Guests(Frame):
             "add": AddGuests(self),
             "view": ViewGuests(self),
             "edit": UpdateGuests(self),
+            "history":ViewHistory(self)
         }
 
         self.current_window = self.windows["view"]

@@ -11,6 +11,7 @@ from .view_employees_in.main import ViewEmployeesIn
 from .view_employees_out.main import ViewEmployeesOut
 from .view_employees_all.main import ViewEmployeesAll
 from .view_employees_compl.main import ViewEmployeesCompl
+from .view_employees_graph.main import ViewEmployeesGraph
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
@@ -41,6 +42,7 @@ class Dashboard(Frame):
             "emplout":ViewEmployeesOut(self),
             "emplall":ViewEmployeesAll(self),
             "emplcompl":ViewEmployeesCompl(self),
+            "emplgraph":ViewEmployeesGraph(self),
         }
 
         self.current_window = self.windows["add"]

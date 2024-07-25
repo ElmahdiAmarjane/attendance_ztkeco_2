@@ -1,6 +1,8 @@
+
 import mysql.connector
 import os
 import matplotlib.pyplot as pt
+from datetime import datetime, timedelta
 
 # Configurations
 from config import config
@@ -26,7 +28,7 @@ cursor = connection.cursor(buffered=True)
 
 
 def checkUser(username, password=None):
-    cmd = f"Select count(username) from login where username='{username}' and BINARY password='{password}'"
+    cmd = f"Select count(username) from login where username='{username}' and BINARY password_='{password}'"
     cursor.execute(cmd)
     cmd = None
     a = cursor.fetchone()[0] >= 1
@@ -380,10 +382,128 @@ def update_employee(name, telephone, id):
     return True
 
 
+# Function to check if entry exists and insert if not
+def insert_entry(user_id, punch_type, date_time):
+    # Check if the entry already exists
+    cursor.execute("""
+        SELECT COUNT(*) FROM entry_exit_log
+        WHERE employee_id = %s AND event_type = %s AND event_time = %s
+    """, (user_id, punch_type, date_time))
+    
+    if cursor.fetchone()[0] == 0:
+        # Insert the new entry
+        cursor.execute("""
+            INSERT INTO entry_exit_log (employee_id, event_type, event_time)
+            VALUES (%s, %s, %s)
+        """, (user_id, punch_type, date_time))
+
+def insert_attendance(attendances):
+    for attendance in attendances:
+        user_id = attendance.get_id()
+        date_time = attendance.get_time()
+        if attendance.get_status() == 0 or attendance.get_status() == 4:
+           event_type='in'
+        else : event_type ='out'
+        
+        # Call the insert_entry function
+        insert_entry(user_id, event_type, date_time)
+
+def get_history_entry_exit(id_employee):
+    cmd = """
+    SELECT 
+        e.id as id,
+        e.name_ as name,
+        e.telephone as telephone,
+        log.event_type as event_type,
+        log.event_time as event_time
+    FROM 
+        entry_exit_log log
+    JOIN 
+        employees e ON log.employee_id = e.id
+    WHERE 
+        log.employee_id = %s
+    ORDER BY 
+        log.event_time;
+    """
+
+    try:
+        # Execute the query with the given employee ID
+        cursor.execute(cmd, (id_employee,))
+        
+        # Fetch all results
+        results = cursor.fetchall()
+        
+        # Return the fetched results
+        return results
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return 
+    
+def get_history_entry_exit(id_employee):
+    cmd = """
+    SELECT 
+        e.id as id,
+        e.name_ as name,
+        e.telephone as telephone,
+        log.event_type as event_type,
+        log.event_time as event_time
+    FROM 
+        entry_exit_log log
+    JOIN 
+        employees e ON log.employee_id = e.id
+    WHERE 
+        log.employee_id = %s
+    ORDER BY 
+        log.event_time;
+    """
+
+    try:
+        # Execute the query with the given employee ID
+        cursor.execute(cmd, (id_employee,))
+        
+        # Fetch all results
+        results = cursor.fetchall()
+        
+        # Return the fetched results
+        return results
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return 
 
 
-
-
+def get_total_hours_worked_by_day():
+    query = '''
+        SELECT DATE(in_time) AS work_date,
+               SUM(TIMESTAMPDIFF(HOUR, in_time, out_time)) AS total_hours_worked
+        FROM (
+            SELECT employee_id,
+                   MIN(event_time) AS in_time,
+                   MAX(event_time) AS out_time
+            FROM entry_exit_log
+            WHERE event_type IN ('in', 'out')
+            GROUP BY employee_id, DATE(event_time)
+            HAVING COUNT(DISTINCT event_type) = 2
+        ) AS daily_work_hours
+        GROUP BY work_date;
+    '''
+    
+    try:
+        cursor.execute(query)
+        results = cursor.fetchall()
+        
+        data = {}
+        for record in results:
+            work_date = record[0].strftime('%Y-%m-%d')  # Format the date as a string
+            total_hours_worked = record[1]
+            data[work_date] = total_hours_worked
+        
+        return data
+    except mysql.connector.Error as e:
+        print(f"MySQL error: {e}")
+        return None
+     
 # def human_format(num):
 #     if num < 1000:
 #         return num

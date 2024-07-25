@@ -27,14 +27,15 @@ def setup_new_employee(entry_username,telephone):
         # Setting up a new user
         except Exception as e:
          print(e)
-         return e
+         return "errorCreateEmployee"
         
         try:
          conn.set_user(uid=user[0], name=user[1], privilege=const.USER_DEFAULT, password='', group_id='', user_id='')
          conn.enroll_user(user[0])
+         
         except  Exception  as e:
          print(e)
-         return e
+         return "errorSavingFingerPrint"
            
 
 
@@ -43,10 +44,10 @@ def setup_new_employee(entry_username,telephone):
         template = conn.get_user_template(uid=user[0])
         print("👍mark fingerprint : ",type(template.mark))
         db_controller.update_template_for_employee(user[0],template.mark)
-        return True
+        return "success"
     except Exception as e:
         print(f"Process terminated: {e}")
-        return e
+        return "errorConnection"
     finally:
         if conn:
             conn.disconnect()  # Disconnecting from the fingerprint scanner if connected

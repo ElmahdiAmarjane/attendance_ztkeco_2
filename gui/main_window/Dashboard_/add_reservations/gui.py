@@ -1,5 +1,5 @@
 from pathlib import Path
-from tkinter import Frame, Canvas, Entry, PhotoImage, Tk
+from tkinter import Button, Frame, Canvas, Entry, PhotoImage, Tk
 import controller as db_controller
 
 OUTPUT_PATH = Path(__file__).parent
@@ -187,8 +187,19 @@ class AddReservations(Frame):
             font=("Montserrat Bold", 20),
             justify="right",
         )
+# ####################
+# ####################
 
-
+      #  button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
+        button_1 = Button(
+            self.canvas,
+            text='More stats',
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.to_view_employees_graph,
+            relief="flat",
+        )
+        button_1.place(x=300.0, y=330.0, width=190.0, height=48.0)
 
 # #########################
         self.canvas.pack(fill="both", expand=True)
@@ -218,6 +229,11 @@ class AddReservations(Frame):
         print("Image clicked")
         # Perform any actions you want to trigger on click here
         self.parent.navigate("emplcompl")
+    def to_view_employees_graph(self):
+        # Callback function for image click event
+        print("Image clicked")
+        # Perform any actions you want to trigger on click here
+        self.parent.navigate("emplgraph")
 
 
 # # Example usage

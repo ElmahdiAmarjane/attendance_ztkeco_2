@@ -15,6 +15,8 @@ from tkinter import (
 )
 from tkinter.ttk import Treeview
 
+from toexcel import on_save_excel_button_click, save_data_to_excel
+
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
@@ -136,6 +138,37 @@ class ViewGuests(Frame):
         )
         self.edit_btn.place(x=463.0, y=359.0, width=116.0, height=48.0)
 
+        self.button_image_6 = PhotoImage(file=relative_to_assets("button_6.png"))
+        self.history_btn = Button(
+            self,
+            image=self.button_image_6,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.handle_history,
+            relief="flat",
+            state="disabled",
+
+        )
+        # Define the columns and their widths
+        columns = ['id', 'name', 'telephone', 'created_at']
+        column_widths = {
+         'A': 10,  # Width for ID column
+         'B': 20,  # Width for Name column
+         'C': 15,  # Width for Telephone column
+         'D': 20   # Width for Created At column
+         }
+
+        self.history_btn.place(x=200.0, y=359.0, width=200.0, height=54.0)
+        self.button_excel = PhotoImage(file=relative_to_assets("xls.png"))
+        self.excel_btn = Button(
+            self,
+            image=self.button_excel,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda:on_save_excel_button_click(db_controller.get_all_employees(),columns,column_widths),
+            relief="flat",
+        )
+        self.excel_btn.place(x=440.0, y=33.0, width=53.0, height=53.0)
         # self.canvas.create_rectangle(
         #     40.0,
         #     101.0,
@@ -209,6 +242,7 @@ class ViewGuests(Frame):
         # Enable the buttons
         self.delete_btn.config(state="normal")
         self.edit_btn.config(state="normal")
+        self.history_btn.config(state="normal")
 
     def handle_refresh(self):
         self.treeview.delete(*self.treeview.get_children())
@@ -238,3 +272,8 @@ class ViewGuests(Frame):
     def handle_edit(self):
         self.parent.navigate("edit")
         self.parent.windows["edit"].initialize()
+
+        
+    def handle_history(self):
+        self.parent.navigate("history")
+        self.parent.windows["history"].initialize()
