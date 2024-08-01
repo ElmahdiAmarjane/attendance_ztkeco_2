@@ -203,7 +203,87 @@ class AddReservations(Frame):
 
 # #########################
         self.canvas.pack(fill="both", expand=True)
-        
+   ##########################
+        self.button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
+        self.refresh_btn = Button(
+            self,
+            image=self.button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.refresh,
+            relief="flat",
+        )
+        self.refresh_btn.place(x=700.0, y=-5, width=35.0, height=35.0)
+
+    #######################🔥
+    def refresh(self):
+     # Clear existing texts
+         self.canvas.delete("text")
+
+    # Update employee counts
+         self.canvas.create_text(
+            164.0,
+            63.0,
+            anchor="ne",
+            text=db_controller.count_in_employees(),
+            fill="#008000",
+            font=("Montserrat Bold", 28),
+            justify="right",
+    )
+
+         self.canvas.create_text(
+        446.0,
+        63.0,
+        anchor="ne",
+        text=db_controller.count_out_employees(),
+        fill="#FF0000",
+        font=("Montserrat Bold", 28),
+        justify="right",
+    )
+
+         self.canvas.create_text(
+        720.0,
+        65.0,
+        anchor="ne",
+        text=db_controller.count_all_employees(),
+        fill="#a456e3",
+        font=("Montserrat Bold", 28),
+        justify="right",
+    )
+
+         results, nbremployeesmore = db_controller.get_employees_with_average_hours()
+         self.canvas.create_text(
+        160.0,
+        215.0,
+        anchor="ne",
+        text=nbremployeesmore,
+        fill="#3b82c4",
+        font=("Montserrat Bold", 28),
+        justify="right",
+    )
+
+         results, nbremployeesless = db_controller.get_employees_with_less_than_8_hours()
+         self.canvas.create_text(
+        440.0,
+        215.0,
+        anchor="ne",
+        text=nbremployeesless,
+        fill="#c9c54d",
+        font=("Montserrat Bold", 28),
+        justify="right",
+    )
+
+         result = db_controller.get_average_total_hours_per_employee()
+         self.canvas.create_text(
+        720.0,
+        215.0,
+        anchor="ne",
+        text=result,
+        fill="#173c5c",
+        font=("Montserrat Bold", 20),
+        justify="right",
+    )
+
     def on_image_click(self, event):
         # Callback function for image click event
         print("Image clicked")
@@ -235,7 +315,7 @@ class AddReservations(Frame):
         # Perform any actions you want to trigger on click here
         self.parent.navigate("emplgraph")
 
-
+    
 # # Example usage
 # if __name__ == "__main__":
 #     root = Tk()

@@ -226,6 +226,8 @@ class AddRooms(Frame):
 
         self.process_image_id = None
         self.success_image_id = None
+        self.process_text_id = None  # Attribute for the process text
+        self.process_text_bg_id = None  # Attribute for the process text background
 
         self.image_image_1 = PhotoImage(file=relative_to_assets("image_2.png"))
         image_1 = self.canvas.create_image(258.0, 153.0, image=self.image_image_1)
@@ -317,10 +319,31 @@ class AddRooms(Frame):
         if self.process_image_id:
             self.canvas.delete(self.process_image_id)
         self.process_image_id = self.canvas.create_image(397, 216, image=self.process_image)
+        
+        if self.process_text_bg_id:
+            self.canvas.delete(self.process_text_bg_id)
+        self.process_text_bg_id = self.canvas.create_rectangle(
+            250, 275, 545, 325,  # Coordinates for the rectangle background
+            fill="#FFFFFF", outline=""
+        )
+        
+        if self.process_text_id:
+            self.canvas.delete(self.process_text_id)
+        self.process_text_id = self.canvas.create_text(
+            397, 300,  # Coordinates for the text
+            anchor="center",
+            text="Please enter your fingerprint on device",
+            fill="#FF0000",  # Bright red color for high visibility
+            font=("Montserrat Bold", 18 * -1),
+        )
 
     def show_success_image(self):
         if self.process_image_id:
             self.canvas.delete(self.process_image_id)
+        if self.process_text_id:
+            self.canvas.delete(self.process_text_id)
+        if self.process_text_bg_id:
+            self.canvas.delete(self.process_text_bg_id)
         self.success_image_id = self.canvas.create_image(397, 216, image=self.success_image)
 
     def hide_success_image(self):
@@ -343,6 +366,11 @@ class AddRooms(Frame):
     def hide_process_image(self):
         if self.process_image_id:
             self.canvas.delete(self.process_image_id)
+        if self.process_text_id:
+            self.canvas.delete(self.process_text_id)
+        if self.process_text_bg_id:
+            self.canvas.delete(self.process_text_bg_id)
+
     def handle_result(self, result):
         if result == "success":
             self.show_success_image()
@@ -352,7 +380,6 @@ class AddRooms(Frame):
             self.hide_process_image()
             messagebox.showerror("Error", "Error creating employee.")
             self.set_widgets_state(NORMAL)
-            
             
         elif result == "errorSavingFingerPrint":
             self.hide_process_image()
@@ -368,6 +395,3 @@ class AddRooms(Frame):
             self.hide_process_image()
             messagebox.showerror("Error", "Unknown error.")
             self.set_widgets_state(NORMAL)
-            
-
-   

@@ -2,6 +2,7 @@ from pathlib import Path
 
 from tkinter import Toplevel, Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
 from controller import *
+from pyzk.example.get_attendence import get_attendence
 from ..main_window.main import mainWindow
 
 OUTPUT_PATH = Path(__file__).parent
@@ -26,6 +27,7 @@ class Login(Toplevel):
             user = self.username.get().lower()
             self.destroy()
             mainWindow()
+            get_attendence()
             return
         else:
             messagebox.showerror(

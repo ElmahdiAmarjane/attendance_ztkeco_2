@@ -64,6 +64,17 @@ class ViewEmployeesGraph(Frame):
         )
         self.refresh_btn.place(x=720.0, y=10.0, width=40.0, height=40.0)
 
+        self.button_image_2 = PhotoImage(file=relative_to_assets("button_2.png"))
+        self.navigate_back_btn = Button(
+            self,
+            image=self.button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.handle_navigate_back,
+            relief="flat",
+        )
+        self.navigate_back_btn.place(x=40.0, y=33.0, width=53.0, height=53.0)
+
         # Fetch data
         data = db_controller.get_total_hours_worked_by_day()
 

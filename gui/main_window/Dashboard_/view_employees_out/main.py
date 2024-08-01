@@ -1,5 +1,6 @@
 from logging import disable
 from pathlib import Path
+from tkinter import ttk
 import controller as db_controller
 
 from tkinter import (
@@ -93,7 +94,8 @@ class ViewEmployeesOut(Frame):
             relief="flat",
         )
         self.refresh_btn.place(x=525.0, y=33.0, width=53.0, height=53.0)
-
+        style = ttk.Style()
+        style.configure("Treeview.Heading", background="black", foreground="white")
         # Add treeview here
         self.columns = {
             "id": "Employee ID",
